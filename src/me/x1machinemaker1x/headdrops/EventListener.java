@@ -71,7 +71,7 @@ public class EventListener implements Listener {
 		if (event.getEntity().getLastDamageCause() == null)
 			return;
 		if (event.getEntity().getLastDamageCause().getCause() == DamageCause.ENTITY_ATTACK && event.getEntity().getKiller() != null) {
-			if (instance.getConfig().getBoolean("permissionCheckMob") && !event.getEntity().getKiller().hasPermission("headdrops.mobhead"))
+			if (instance.getConfig().getBoolean("permissionCheckMob") && !event.getEntity().getKiller().hasPermission("headdrops.mobheaddrop"))
 				return;
 			if (event.getEntityType() == EntityType.SKELETON && chance("skeleton"))
 				event.getDrops().add(new ItemStack(Material.SKULL_ITEM, 1, (byte) 0));
@@ -100,7 +100,7 @@ public class EventListener implements Listener {
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		Player killer = event.getEntity().getKiller();
 		if (chance("player") && event.getEntity().getLastDamageCause() != null && event.getEntity().getLastDamageCause().getCause() == DamageCause.ENTITY_ATTACK && killer != null) {
-			if ((instance.getConfig().getBoolean("permissionCheckPlayer") && !event.getEntity().getKiller().hasPermission("headdrops.playerhead")))
+			if ((instance.getConfig().getBoolean("permissionCheckPlayer") && !event.getEntity().getKiller().hasPermission("headdrops.playerheaddrop")))
 				return;
 			event.getDrops().add(instance.getConfig().getBoolean("dropBlank") ? new ItemStack(Material.SKULL_ITEM, 1, (byte) 3) : CSkull.getPlayerSkull(event.getEntity().getName()));
 		}
@@ -109,5 +109,4 @@ public class EventListener implements Listener {
 	private boolean chance(String mobType) {
 		return rand.nextInt(100) < instance.getConfig().getInt("chance." + mobType);
 	}
-
 }

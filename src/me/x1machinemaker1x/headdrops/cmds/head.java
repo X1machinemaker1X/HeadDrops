@@ -29,6 +29,10 @@ public final class head extends SubCommand {
 
         } 
         else if (args.length == 2) {
+        	if (!cs.hasPermission("headdrop.head.other")) {
+        		cs.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMISSION.toString());
+        		return;
+        	}
             @SuppressWarnings("deprecation")
 			final Player target = Bukkit.getPlayer(args[0]);
             if (target == null) {

@@ -23,19 +23,27 @@ public class headinfo extends SubCommand {
     	Player p = (Player) cs;
     	Player target = null;
         if (args.length == 1) {
+        	if (!p.hasPermission("headdrops.info.other")) {
+        		p.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMISSION.toString());
+        		return;
+        	}
             target = Bukkit.getPlayer(args[0]);
             if (target == null) {
                 p.sendMessage(Lang.TITLE.toString() + Lang.NOT_ONLINE.toString());
                 return;
             }
-        } 
+            
+        }
+        else {
+        	target = p;
+        }
 
-        if (active.contains(p.getName())) {
-            active.remove(p.getName());
-            p.sendMessage(Lang.TITLE.toString() + Lang.HEADINFO.toString().replace("%state", "disabled").replace("%p", (target == null) ? p.getName() : target.getName()));
+        if (active.contains(target.getName())) {
+            active.remove(target.getName());
+            p.sendMessage(Lang.TITLE.toString() + Lang.HEADINFO.toString().replace("%state", "disabled").replace("%p", (target.getUniqueId().equals(p.getUniqueId())) ? p.getName() : target.getName()));
         } else {
-            active.add(p.getName());
-            p.sendMessage(Lang.TITLE.toString() + Lang.HEADINFO.toString().replace("%state", "enabled").replace("%p", (target == null) ? p.getName() : target.getName()));
+            active.add(target.getName());
+            p.sendMessage(Lang.TITLE.toString() + Lang.HEADINFO.toString().replace("%state", "enabled").replace("%p", (target.getUniqueId().equals(p.getUniqueId())) ? p.getName() : target.getName()));
         }
     }
     

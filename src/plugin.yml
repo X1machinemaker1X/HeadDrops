@@ -4,6 +4,28 @@ authors: [X1machinemaker1X, pizzafreak08]
 main: me.x1machinemaker1x.headdrops.HeadDrops
 description: Make hostile Mobs and Players drop their Heads!
 commands:
-    headdrops:
-      description: Main command for HeadDrops
-      aliases: [hd]
+  headdrops:
+    description: Main command for HeadDrops
+    aliases: [hd]
+      
+permissions:
+  headdrops.help:
+    default: true
+  headdrops.head:
+    default: op
+  headdrops.head.other:
+    default: op
+  headdrops.info:
+    default: op
+  headdrops.info.other:
+    default: op
+  headdrops.mobhead:
+    default: op
+  headdrops.myhead:
+    default: op
+  headdrops.reload:
+    default: op
+  headdrops.mobheaddrops:
+    default: false
+  headdrops.playerheaddrops:
+    default: false
