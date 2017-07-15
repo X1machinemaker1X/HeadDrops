@@ -1,22 +1,9 @@
 name: HeadDrops
-version: 2.0
-author: pizzafreak08
-main: de.timolia.headdrops.HeadDrops
-website: http://www.timolia.de/
+version: 2.1
+authors: [X1machinemaker1X, pizzafreak08]
+main: me.x1machinemaker1x.headdrops.HeadDrops
 description: Make hostile Mobs and Players drop their Heads!
 commands:
-    head:
-        description: Gives you or someone else the head of a specific Player
-        usage: /head [player] <name of head>
     headdrops:
-        description: Reload the plugin config
-        usage: /headdrops <reload>
-    myhead:
-        description: Gives you your head
-        usage: /myhead
-    headinfo:
-        description: Get the name of a clicked head displayed
-        usage: /headinfo
-    mobhead:
-        description: Get the head from a specific mob
-        usage: /mobhead <mob>
+      description: Main command for HeadDrops
+      aliases: [hd]

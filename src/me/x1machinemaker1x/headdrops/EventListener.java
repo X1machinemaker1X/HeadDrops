@@ -3,7 +3,7 @@
  *  2013 Darius Mewes
  */
 
-package de.timolia.headdrops;
+package me.x1machinemaker1x.headdrops;
 
 import java.util.Random;
 
@@ -13,8 +13,6 @@ import org.bukkit.SkullType;
 import org.bukkit.block.Skull;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Skeleton;
-import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -23,10 +21,12 @@ import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
+import org.json.simple.JSONObject;
 
-import de.timolia.headdrops.cmds.headinfo;
+import me.x1machinemaker1x.headdrops.cmds.headinfo;
+import me.x1machinemaker1x.headdrops.utils.CSkull;
+import me.x1machinemaker1x.headdrops.utils.JSONUtil;
 
 public class EventListener implements Listener {
 
@@ -37,11 +37,12 @@ public class EventListener implements Listener {
 		this.instance = instance;
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onBlockDamage(BlockDamageEvent event) {
 		if (event.getBlock().getType() == Material.SKULL && headinfo.isActive(event.getPlayer())) {
-			Skull skull = (Skull) event.getBlock().getState();
-			if (skull.getSkullType() == SkullType.PLAYER && skull.hasOwner() && !SkullManager.isSkullCustom(skull.getOwner())) {
+			Skull skull = (org.bukkit.block.Skull) event.getBlock().getState();
+			if (skull.getSkullType() == SkullType.PLAYER && skull.hasOwner()) {
 				event.getPlayer().sendMessage(HeadDrops.PREFIX + (skull.getOwner() != null ? ("This is " + skull.getOwner() + (skull.getOwner().endsWith("s") || skull.getOwner().endsWith("S") ? "'" : "'s") + " head.") : "This head is unknown..."));
 				event.setCancelled(true);
 			}
@@ -52,22 +53,16 @@ public class EventListener implements Listener {
 	public void onBlockBreak(BlockBreakEvent event) {
 		if (event.getBlock().getType() == Material.SKULL && event.getPlayer().getGameMode() == GameMode.SURVIVAL) {
 			Skull skull = (Skull) event.getBlock().getState();
-			if (skull.getSkullType() == SkullType.PLAYER) {
-				String owner = skull.getOwner();
-				if (SkullManager.isSkullCustom(owner)) {
+			String brokenSkull = skull.getOwningPlayer().getUniqueId().toString();
+			JSONObject obj = JSONUtil.getJSONObject("head-uuids");
+			for (Object m : obj.keySet()) {
+				String mob = String.valueOf(m);
+				if (obj.get(m).toString().equals(brokenSkull)) {
 					event.setCancelled(true);
 					event.getBlock().setType(Material.AIR);
-					event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), SkullManager.getCustomSkull(CustomSkullType.forSkullOwnerString(owner)));
+					event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), CustomSkullType.getCST(mob).getSkull());
 				}
 			}
-		}
-	}
-
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onPlayerJoin(PlayerJoinEvent event) {
-		if (instance.updateAvailable && instance.getConfig().getBoolean("update-checker") && (event.getPlayer().isOp() || event.getPlayer().hasPermission("headdrops.update"))) {
-			event.getPlayer().sendMessage(HeadDrops.PREFIX + "A new version is available!");
-			event.getPlayer().sendMessage(HeadDrops.PREFIX + "Get it at http://dev.bukkit.org/server-mods/head-drops");
 		}
 	}
 
@@ -75,25 +70,28 @@ public class EventListener implements Listener {
 	public void onEntityDeath(EntityDeathEvent event) {
 		if (event.getEntity().getLastDamageCause() == null)
 			return;
-
 		if (event.getEntity().getLastDamageCause().getCause() == DamageCause.ENTITY_ATTACK && event.getEntity().getKiller() != null) {
 			if (instance.getConfig().getBoolean("permissionCheckMob") && !event.getEntity().getKiller().hasPermission("headdrops.mobhead"))
 				return;
-
-			if (event.getEntity().getType() == EntityType.SKELETON && ((Skeleton) event.getEntity()).getSkeletonType() == SkeletonType.NORMAL && chance("skeleton"))
+			if (event.getEntityType() == EntityType.SKELETON && chance("skeleton"))
 				event.getDrops().add(new ItemStack(Material.SKULL_ITEM, 1, (byte) 0));
-			else if (event.getEntity().getType() == EntityType.ZOMBIE && chance("zombie"))
+			else if (event.getEntityType() == EntityType.WITHER_SKULL && chance("wither_skeleton")) 
+				event.getDrops().add(new ItemStack(Material.SKULL_ITEM, 1, (byte) 1));
+			else if (event.getEntityType() == EntityType.ZOMBIE && chance("zombie"))
 				event.getDrops().add(new ItemStack(Material.SKULL_ITEM, 1, (byte) 2));
-			else if (event.getEntity().getType() == EntityType.CREEPER && chance("creeper"))
+			else if (event.getEntityType() == EntityType.CREEPER && chance("creeper"))
 				event.getDrops().add(new ItemStack(Material.SKULL_ITEM, 1, (byte) 4));
+			else if (event.getEntityType() == EntityType.ENDER_DRAGON && chance("ender_dragon"))
+				event.getDrops().add(new ItemStack(Material.SKULL_ITEM, 1, (byte) 5));
 			else {
-				String entityType = event.getEntity().getType().toString();
-				for (CustomSkullType skullType : CustomSkullType.values())
+				String entityType = event.getEntityType().toString();
+				for (CustomSkullType skullType : CustomSkullType.values()) {
 					if (entityType.equals(skullType.toString())) {
 						if (chance(skullType.toString().toLowerCase()))
-							event.getDrops().add(SkullManager.getCustomSkull(skullType));
+							event.getDrops().add(skullType.getSkull());
 						break;
 					}
+				}
 			}
 		}
 	}
@@ -104,8 +102,7 @@ public class EventListener implements Listener {
 		if (chance("player") && event.getEntity().getLastDamageCause() != null && event.getEntity().getLastDamageCause().getCause() == DamageCause.ENTITY_ATTACK && killer != null) {
 			if ((instance.getConfig().getBoolean("permissionCheckPlayer") && !event.getEntity().getKiller().hasPermission("headdrops.playerhead")))
 				return;
-
-			event.getDrops().add(instance.getConfig().getBoolean("dropBlank") ? new ItemStack(Material.SKULL_ITEM, 1, (byte) 3) : SkullManager.getSkinnedHead(event.getEntity().getName()));
+			event.getDrops().add(instance.getConfig().getBoolean("dropBlank") ? new ItemStack(Material.SKULL_ITEM, 1, (byte) 3) : CSkull.getPlayerSkull(event.getEntity().getName()));
 		}
 	}
 
