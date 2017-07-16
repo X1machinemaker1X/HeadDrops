@@ -40,7 +40,7 @@ public final class head extends SubCommand {
             } 
             else {
                 target.getInventory().addItem(CSkull.getPlayerSkull(args[1]));
-                cs.sendMessage(Lang.TITLE.toString() + Lang.PLAYER_HEAD_RECEIVED.toString().replace("%r", target.getName()).replace("%p", args[0]));
+                cs.sendMessage(Lang.TITLE.toString() + Lang.PLAYER_HEAD_RECEIVED.toString().replace("%r", target.getName()).replace("%p", args[1]));
             }
         }
     }

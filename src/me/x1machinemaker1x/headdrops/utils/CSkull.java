@@ -5,7 +5,6 @@ import java.util.UUID;
 import org.apache.commons.codec.binary.Base64;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -14,7 +13,8 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 
-import net.minecraft.server.v1_12_R1.NBTTagCompound;
+
+
 
 /**
  * Represents some special mob heads, also support creating player skulls and custom skulls.
@@ -88,15 +88,6 @@ public enum CSkull {
         Reflections.getField(headMetaClass, "profile", GameProfile.class).set(headMeta, profile);
         headMeta.setDisplayName(ChatColor.RESET + name);
         head.setItemMeta(headMeta);
-        net.minecraft.server.v1_12_R1.ItemStack nms = CraftItemStack.asNMSCopy(head);
-        NBTTagCompound tag;
-        if (nms.getTag() != null) 
-        	tag = nms.getTag();
-        else
-        	tag = new NBTTagCompound();
-        tag.setString("mob_head", name);
-        nms.setTag(tag);
-        head = CraftItemStack.asCraftMirror(nms);
         return head;
     }
     
@@ -121,15 +112,6 @@ public enum CSkull {
         Reflections.getField(headMetaClass, "profile", GameProfile.class).set(headMeta, profile);
         headMeta.setDisplayName(ChatColor.RESET + name);
         head.setItemMeta(headMeta);
-        net.minecraft.server.v1_12_R1.ItemStack nms = CraftItemStack.asNMSCopy(head);
-        NBTTagCompound tag;
-        if (nms.getTag() != null) 
-        	tag = nms.getTag();
-        else
-        	tag = new NBTTagCompound();
-        tag.setString("mob_head", name);
-        nms.setTag(tag);
-        head = CraftItemStack.asCraftMirror(nms);
         return head;
     }
 

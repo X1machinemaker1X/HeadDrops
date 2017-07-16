@@ -51,8 +51,7 @@ public class CommandManager implements CommandExecutor {
 			cs.sendMessage(Lang.TITLE.toString() + Lang.NOT_PLAYER.toString());
 			return true;
 		}
-		Player p = (Player) cs;
-		if (!p.hasPermission(command.permission())) {
+		if (!cs.hasPermission(command.permission())) {
 			cs.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMISSION.toString());
 			return true;
 		}
@@ -61,13 +60,13 @@ public class CommandManager implements CommandExecutor {
 		a.remove(0);
 		args = a.toArray(new String[a.size()]);
 		if (!command.possArgs().contains(args.length)) {
-			p.sendMessage(Lang.TITLE.toString() + command.usage());
+			cs.sendMessage(Lang.TITLE.toString() + command.usage());
 			return true;
 		}
 		try {
-			command.onCommand(p, args);
+			command.onCommand(cs, args);
 		} catch (Exception e) {
-			p.sendMessage(Lang.ERROR.toString().replace("%reason", "The command wasn't successfully registered!"));
+			cs.sendMessage(Lang.ERROR.toString().replace("%reason", "The command wasn't successfully registered!"));
 			e.printStackTrace();
 		}
 		return true;
