@@ -49,7 +49,7 @@ public class EventListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
 	public void onBlockBreak(BlockBreakEvent event) {
 		if (event.getBlock().getType() == Material.SKULL && event.getPlayer().getGameMode() == GameMode.SURVIVAL) {
 			Skull skull = (Skull) event.getBlock().getState();
@@ -107,6 +107,6 @@ public class EventListener implements Listener {
 	}
 
 	private boolean chance(String mobType) {
-		return rand.nextInt(100) < instance.getConfig().getInt("chance." + mobType);
+		return rand.nextInt(100) < instance.getConfig().getDouble("chance." + mobType);
 	}
 }
