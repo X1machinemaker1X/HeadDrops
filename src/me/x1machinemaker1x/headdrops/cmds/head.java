@@ -33,7 +33,6 @@ public final class head extends SubCommand {
         		cs.sendMessage(Lang.TITLE.toString() + Lang.NO_PERMISSION.toString());
         		return;
         	}
-            @SuppressWarnings("deprecation")
 			final Player target = Bukkit.getPlayer(args[0]);
             if (target == null) {
                 cs.sendMessage(Lang.TITLE.toString() + Lang.NOT_ONLINE.toString());

@@ -18,7 +18,6 @@ public class headinfo extends SubCommand {
 
     private static List<String> active = new ArrayList<String>();
 
-    @SuppressWarnings("deprecation")
 	public void onCommand(CommandSender cs, String[] args) {
     	Player p = (Player) cs;
     	Player target = null;

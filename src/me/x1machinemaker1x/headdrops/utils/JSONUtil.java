@@ -81,6 +81,7 @@ public class JSONUtil {
 		catch (Exception e) { }
 	}
 	
+	@SuppressWarnings("unchecked")
 	private static void firstSetup() {
 		
 		Iterator<String> it = urls.iterator();

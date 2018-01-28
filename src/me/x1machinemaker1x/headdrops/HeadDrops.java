@@ -39,7 +39,7 @@ public class HeadDrops extends JavaPlugin implements Listener {
 
     public void onEnable() {
         initConfig();
-        initLang();
+        Lang.setup(this);
         JSONUtil.setup(this);
         
         CommandManager cm = new CommandManager(this);
@@ -104,32 +104,6 @@ public class HeadDrops extends JavaPlugin implements Listener {
 
     public void reload() {
         this.reloadConfig();
-    }
-    
-    private void initLang() {
-    	File lang = new File(getDataFolder(), "lang.yml");
-    	if (!lang.exists()) {
-    		try {
-    			getDataFolder().mkdir();
-    			lang.createNewFile();
-    		}
-    		catch (Exception e) {
-    			Bukkit.getLogger().severe("Could not create lang.yml");
-    		}
-    	}
-    	YamlConfiguration conf = YamlConfiguration.loadConfiguration(lang);
-    	for (Lang item : Lang.values())
-    		if (conf.isSet(item.getPath()))
-    				conf.set(item.getPath(), item.getDefault());
-    	Lang.setFile(conf);
-    	this.LANG = conf;
-    	this.LANG_FILE = lang;
-    	try {
-    		conf.save(getLangFile());
-    	}
-    	catch (Exception e) {
-    		Bukkit.getLogger().severe("Could not save lang.yml");
-    	}
     }
 
     private void initConfig() {

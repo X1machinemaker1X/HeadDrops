@@ -1,7 +1,10 @@
 package me.x1machinemaker1x.headdrops.utils;
 
-import org.bukkit.ChatColor;
+import java.io.File;
+
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 
 public enum Lang {
 	
@@ -18,47 +21,50 @@ public enum Lang {
 	ERROR("error", "&4ERROR: %reason");
 	
 	private String path;
-	private String def;
-	private static YamlConfiguration LANG;
+	private String message;
 	
-	/**
-	 * Lang enum constructor
-	 * @param path The config path
-	 * @param start The default string
-	 */
-	private Lang(String path, String start) {
+	private Lang(String path, String def) {
 		this.path = path;
-		this.def = start;
+		this.message = def;
 	}
 	
-	/**
-	 * Set the (@code YamlConfiguration) to use.
-	 * @param config The config to set.
-	 */
-	public static void setFile(YamlConfiguration config) {
-		LANG = config;
-	}
-	
-	@Override
-	public String toString() {
-		if (this == TITLE)
-			return ChatColor.translateAlternateColorCodes('&', LANG.getString(this.path, def)) + " ";
-		return ChatColor.translateAlternateColorCodes('&', LANG.getString(this.path, def));
-	}
-	
-	/**
-	 * Get the default value of the path
-	 * @return The default value of the path.
-	 */
-	public String getDefault() {
-		return this.def;
-	}
-	
-	/**
-	 * Get the path to the string
-	 * @return The path to the string
-	 */
-	public String getPath() {
+	public String path() {
 		return this.path;
+	}
+	
+	public String message() {
+		return this.message;
+	}
+	
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	
+	private static File lfile;
+	private static FileConfiguration lconfig;
+	public static void setup(Plugin p) {
+		lfile = new File(p.getDataFolder(), "lang.yml");
+		if (!lfile.exists()) {
+			try {
+				p.getDataFolder().mkdir();
+				lfile.createNewFile();
+			} catch (Exception e) {
+				p.getLogger().severe("Could not create lang.yml");
+				return;
+			}
+		}
+		lconfig = YamlConfiguration.loadConfiguration(lfile);
+		for (Lang message : Lang.values()) {
+			if (!lconfig.isSet(message.path()))
+				lconfig.set(message.path(), message.message());
+			else 
+				if (!lconfig.getString(message.path()).equals(message.message()))
+					message.setMessage(lconfig.getString(message.path()));
+		}
+		try {
+			lconfig.save(lfile);
+		} catch (Exception e) {
+			p.getLogger().severe("Could not save lang.yml");
+		}
 	}
 }
