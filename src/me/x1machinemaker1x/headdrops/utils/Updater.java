@@ -589,10 +589,11 @@ public class Updater {
         final String title = this.versionName;
         if (this.type != UpdateType.NO_VERSION_CHECK) {
             final String localVersion = this.plugin.getDescription().getVersion();
-            this.plugin.getLogger().info(title);
             if (title.split(DELIMETER).length >= 2) {
                 // Get the newest file's version number
                 final String remoteVersion = title.split(DELIMETER)[title.split(DELIMETER).length - 1].split(" ")[0];
+                System.out.println("Local ------------------------------" + localVersion);
+            	System.out.println("Remote " + remoteVersion);
                 if (this.hasTag(localVersion) || !this.shouldUpdate(localVersion, remoteVersion)) {
                     // We already have the latest version, or this build is tagged for no-update
                     this.result = Updater.UpdateResult.NO_UPDATE;
@@ -639,7 +640,32 @@ public class Updater {
      * @return true if Updater should consider the remote version an update, false if not.
      */
     public boolean shouldUpdate(String localVersion, String remoteVersion) {
-        return !localVersion.equalsIgnoreCase(remoteVersion);
+    	if (remoteVersion.endsWith(".jar")) { //gets rid of the .jar extension in case I forgot to leave it off
+    		remoteVersion = remoteVersion.replace(".jar", "");
+    	}
+    	
+    	String[] local = new String[3];
+    	String[] remote = new String[3];
+    	local[0] = localVersion.split("\\.")[0]; local[1] = localVersion.split("\\.")[1];
+    	remote[0] = remoteVersion.split("\\.")[0]; remote[1] = remoteVersion.split("\\.")[1];
+    	
+    	if (localVersion.split("\\.").length == 2) {
+    		local[2] = "0";
+    	}
+    	else {
+    		local[2] = localVersion.split("\\.")[2];
+    	}
+    	if (remoteVersion.split("\\.").length == 2) {
+    		remote[2] = "0";
+    	}
+    	else {
+    		remote[2] = remoteVersion.split("\\.")[2];
+    	}
+  
+    	if ((Integer.valueOf(remote[2]) > Integer.valueOf(local[2])) || (Integer.valueOf(remote[1]) > Integer.valueOf(local[1])) || (Integer.valueOf(remote[0]) > Integer.valueOf(local[0])))
+    		return true;
+    	else 
+    		return false;
     }
 
     /**

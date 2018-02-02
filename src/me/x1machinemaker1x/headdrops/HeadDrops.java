@@ -50,7 +50,7 @@ public class HeadDrops extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new EventListener(this), this);
 
         dataFolder = getDataFolder();
-        logger = Bukkit.getLogger();
+        logger = this.getLogger();
         checkForUpdates = this.getConfig().getBoolean("check-for-updates");
         autoDownload = this.getConfig().getBoolean("auto-download-updates");
 
@@ -65,13 +65,13 @@ public class HeadDrops extends JavaPlugin implements Listener {
         	updater = new Updater(this, PROJECT_ID, getFile(), (autoDownload) ? UpdateType.DEFAULT : UpdateType.NO_DOWNLOAD, true);
 	        switch (updater.getResult()) {
 			case SUCCESS:
-				logger.info("The newest version of DecraftingTable has been successfully downloaded!");
+				logger.info("The newest version of HeadDrops has been successfully downloaded!");
 				break;
 			case DISABLED:
-				logger.info("Automatic updating for DecraftingTable has been disabled by a server administrator!");
+				logger.info("Automatic updating for HeadDrops has been disabled by a server administrator!");
 				break;
 			case FAIL_APIKEY:
-				logger.severe("The API key for DecraftingTable has been improperly setup!");
+				logger.severe("The API key for HeadDrops has been improperly setup!");
 				break;
 			case FAIL_BADID:
 				logger.severe("The project ID provided by the plugin is invalid and does not exist on dev.bukkit.org!");
