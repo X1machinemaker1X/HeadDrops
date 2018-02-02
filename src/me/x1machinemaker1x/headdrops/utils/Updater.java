@@ -592,8 +592,6 @@ public class Updater {
             if (title.split(DELIMETER).length >= 2) {
                 // Get the newest file's version number
                 final String remoteVersion = title.split(DELIMETER)[title.split(DELIMETER).length - 1].split(" ")[0];
-                System.out.println("Local ------------------------------" + localVersion);
-            	System.out.println("Remote " + remoteVersion);
                 if (this.hasTag(localVersion) || !this.shouldUpdate(localVersion, remoteVersion)) {
                     // We already have the latest version, or this build is tagged for no-update
                     this.result = Updater.UpdateResult.NO_UPDATE;
