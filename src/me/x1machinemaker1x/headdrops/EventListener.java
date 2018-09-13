@@ -53,6 +53,7 @@ public class EventListener implements Listener {
 	public void onBlockBreak(BlockBreakEvent event) {
 		if (event.getBlock().getType() == Material.SKULL && event.getPlayer().getGameMode() == GameMode.SURVIVAL) {
 			Skull skull = (Skull) event.getBlock().getState();
+			if (skull.getOwningPlayer() == null) { return; } 
 			String brokenSkull = skull.getOwningPlayer().getUniqueId().toString();
 			JSONObject obj = JSONUtil.getJSONObject("head-uuids");
 			for (Object m : obj.keySet()) {

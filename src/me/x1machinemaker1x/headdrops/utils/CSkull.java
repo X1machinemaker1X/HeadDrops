@@ -121,7 +121,8 @@ public enum CSkull {
      * @param name player's name
      * @return itemstack
      */
-    public static ItemStack getPlayerSkull(String name) {
+    @SuppressWarnings("deprecation")
+	public static ItemStack getPlayerSkull(String name) {
         ItemStack itemStack = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
         SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
         meta.setOwner(name);
@@ -143,7 +144,8 @@ public enum CSkull {
      *
      * @return itemstack
      */
-    public ItemStack getSkull() {
+    @SuppressWarnings("deprecation")
+	public ItemStack getSkull() {
         ItemStack itemStack = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
         SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
         meta.setOwner(id);
