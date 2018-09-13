@@ -2,6 +2,7 @@ package me.x1machinemaker1x.headdrops.utils;
 
 import java.io.File;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -35,6 +36,12 @@ public enum Lang {
 	public String message() {
 		return this.message;
 	}
+	
+	@Override
+	public String toString() {
+		return ChatColor.translateAlternateColorCodes('&', this.message);
+	}
+	
 	
 	public void setMessage(String message) {
 		this.message = message;
